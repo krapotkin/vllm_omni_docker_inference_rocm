@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+.env.local
+test_output/
+*.wav

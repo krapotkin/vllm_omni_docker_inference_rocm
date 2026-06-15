@@ -1,0 +1,45 @@
+# vLLM-Omni TTS Server — Docker Compose (ROCm / AMD GPU)
+# Модель: CosyVoice3 0.5B (TTS с voice cloning)
+# vLLM-Omni: 0.22.0 (ROCm / AMD GPU)
+
+services:
+  vllm-omni:
+    image: ${DOCKER_IMAGE:-vllm-omni-rocm_v0_22_0:latest}
+    container_name: vllm-omni-rocm-tts
+    command: >
+      ${MODEL_PATH:-/models/Fun-CosyVoice3-0.5B-2512}
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION:-0.35}
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    restart: unless-stopped
+    shm_size: '8gb'
+    ipc: host
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    group_add:
+      - "video"
+      - "render"
+    stdin_open: true
+    tty: true
+    ports:
+      - "${PORT:-8092}:8000"
+    volumes:
+      - ${MODEL_HOST_PATH:-/home/hermes/workspace/models/models_tts/Fun-CosyVoice3-0.5B-2512}:/models/Fun-CosyVoice3-0.5B-2512:ro
+      - ${WORKSPACE_PATH:-/home/hermes/workspace}:/workspace:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    env_file: local.env
+    network_mode: bridge
