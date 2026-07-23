@@ -1,0 +1,17 @@
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-cosyvoice3
+    command: >
+      /models/Fun-CosyVoice3-0.5B-2512
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization 0.35
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "8092:8000"
+    volumes:
+      - /home/hermes/workspace/models/models_tts/Fun-CosyVoice3-0.5B-2512:/models/Fun-CosyVoice3-0.5B-2512:ro
+      - /home/hermes/workspace:/workspace:ro

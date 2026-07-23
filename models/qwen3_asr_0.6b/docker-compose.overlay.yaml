@@ -1,0 +1,16 @@
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-qwen3-asr-0.6b
+    command: >
+      /models/Qwen3-ASR-0.6B
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization 0.2
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "8110:8000"
+    volumes:
+      - /home/hermes/workspace/models/models_asr/Qwen3-ASR-0.6B:/models/Qwen3-ASR-0.6B:ro
+      - /home/hermes/workspace:/workspace:ro

@@ -1,0 +1,17 @@
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-moss-tts-nano
+    command: >
+      /models/MOSS-TTS-Nano
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization 0.35
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "8099:8000"
+    volumes:
+      - /home/hermes/workspace/models/models_tts/MOSS-TTS-Nano:/models/MOSS-TTS-Nano:ro
+      - /home/hermes/workspace:/workspace:ro

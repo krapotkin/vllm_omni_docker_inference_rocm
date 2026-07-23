@@ -1,0 +1,17 @@
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-qwen3-tts-customvoice-1.7b
+    command: >
+      /models/Qwen3-TTS-12Hz-1.7B-CustomVoice
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization 0.35
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "8094:8000"
+    volumes:
+      - /home/hermes/workspace/models/models_tts/Qwen3-TTS-12Hz-1.7B-CustomVoice:/models/Qwen3-TTS-12Hz-1.7B-CustomVoice:ro
+      - /home/hermes/workspace:/workspace:ro
