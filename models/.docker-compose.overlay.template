@@ -1,0 +1,20 @@
+# Docker Compose для конкретной модели TTS
+# Используется как: docker compose -f docker-compose.yaml -f models/<model>/docker-compose.overlay.yaml up -d
+
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-${MODEL_NAME}
+    command: >
+      ${MODEL_CONTAINER_PATH}
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization ${GPU_MEMORY_UTILIZATION}
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "${PORT}:8000"
+    volumes:
+      - ${MODEL_HOST_PATH}:${MODEL_CONTAINER_PATH}:ro
+      - ${WORKSPACE_PATH}:/workspace:ro

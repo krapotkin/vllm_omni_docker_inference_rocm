@@ -1,0 +1,17 @@
+services:
+  vllm-omni:
+    container_name: vllm-omni-rocm-voxcpm2
+    command: >
+      /models/VoxCPM2
+      --omni
+      --host 0.0.0.0
+      --port 8000
+      --trust-remote-code
+      --gpu-memory-utilization 0.35
+      --enforce-eager
+      --allowed-local-media-path /workspace
+    ports:
+      - "8101:8000"
+    volumes:
+      - /home/hermes/workspace/models/models_tts/VoxCPM2:/models/VoxCPM2:ro
+      - /home/hermes/workspace:/workspace:ro
